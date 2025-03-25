@@ -1,1 +1,1 @@
-from . import jitendex_simple
+from . import simplify_jitendex_glossary
