@@ -24,7 +24,7 @@ def simplify_notes(browser):
         return
 
     notes = []
-    undo = mw.col.add_custom_undo_entry(f"Undo {NAME}")
+    undo = mw.col.add_custom_undo_entry(NAME)
     mw.progress.start()
     for note_id in note_ids:
         note = mw.col.get_note(note_id)
