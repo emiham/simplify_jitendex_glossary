@@ -1,3 +1,4 @@
+from anki import hooks
 from aqt import mw, gui_hooks
 from aqt.qt import QKeySequence
 from aqt.utils import tooltip, tr
@@ -13,11 +14,30 @@ def setup_menu(browser):
     action.triggered.connect(lambda _, b=browser: simplify_notes(b))
 
 
-def simplify_notes(browser):
+def simplify_note(note):
     glossary_field = mw.addonManager.getConfig(__name__)["glossary_field"]
+    assert glossary_field in note.keys()
+
     sense_separator = mw.addonManager.getConfig(__name__)["sense_separator"]
     subsense_separator = mw.addonManager.getConfig(__name__)["subsense_separator"]
 
+    soup = BeautifulSoup(note[glossary_field], "html.parser")
+    definitions = []
+    for glossary in soup.findAll(attrs={"data-sc-content": "glossary"}):
+        glosses = [item.get_text() for item in glossary.findAll("li")]
+        definitions.append(subsense_separator.join(glosses))
+
+    note[glossary_field] = sense_separator.join(definitions)
+    return note
+
+
+def on_add_note(collection, note, deck_id):
+    if mw.addonManager.getConfig(__name__)["modify_new"]:
+        simplify_note(note)
+    return
+
+
+def simplify_notes(browser):
     note_ids = browser.selectedNotes()
     if not note_ids:
         tooltip(tr.browsing_no_selection(), period=2000)
@@ -27,16 +47,7 @@ def simplify_notes(browser):
     undo = mw.col.add_custom_undo_entry(NAME)
     mw.progress.start()
     for note_id in note_ids:
-        note = mw.col.get_note(note_id)
-        assert glossary_field in note.keys()
-        soup = BeautifulSoup(note[glossary_field], "html.parser")
-        definitions = []
-        for glossary in soup.findAll(attrs={"data-sc-content": "glossary"}):
-            glosses = [item.get_text() for item in glossary.findAll("li")]
-            definitions.append(subsense_separator.join(glosses))
-
-        note[glossary_field] = sense_separator.join(definitions)
-        notes.append(note)
+        notes.append(simplify_note(mw.col.get_note(note_id)))
 
     mw.col.update_notes(notes)
     mw.col.merge_undo_entries(undo)
@@ -45,3 +56,4 @@ def simplify_notes(browser):
 
 
 gui_hooks.browser_menus_did_init.append(setup_menu)
+hooks.note_will_be_added.append(on_add_note)
