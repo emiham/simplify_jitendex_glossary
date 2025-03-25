@@ -6,4 +6,4 @@ In the addon's settings, set `glossary_field` to the name of the field you want 
 
 New cards will be automatically formatted when you add them. You can disable this by changing `update_new` from `true` to `false`.
 
-In the card browser, select the notes you want to update, and click "Simplify Jitendex glossary" in the *Edit* menu.
+In the card browser, select the notes you want to update, and click *Simplify Jitendex glossary* in the *Edit* menu.
