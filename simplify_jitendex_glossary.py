@@ -51,6 +51,7 @@ def simplify_notes(browser):
 
     mw.col.update_notes(notes)
     mw.col.merge_undo_entries(undo)
+    tooltip(tr.browsing_notes_updated(len(notes)), period=2000)
     mw.progress.finish()
     mw.reset()
 
