@@ -25,7 +25,15 @@ def simplify_note(note):
     definitions = []
     for glossary in soup.findAll(attrs={"data-sc-content": "glossary"}):
         glosses = [item.get_text() for item in glossary.findAll("li")]
-        definitions.append(subsense_separator.join(glosses))
+
+        explanation = glossary.find_next(attrs={"data-sc-content": "info-gloss"})
+        if explanation:
+            explanation = explanation.get_text(strip=True, separator=" ")
+            explanation = explanation.replace("Explanation", "", 1).strip()
+            definitions.append(subsense_separator.join(glosses) + f" ({explanation})")
+
+        else:
+            definitions.append(subsense_separator.join(glosses))
 
     note[glossary_field] = sense_separator.join(definitions)
     return note
