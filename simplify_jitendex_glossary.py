@@ -16,7 +16,8 @@ def setup_menu(browser):
 
 def simplify_note(note):
     glossary_field = mw.addonManager.getConfig(__name__)["glossary_field"]
-    assert glossary_field in note.keys()
+    if glossary_field not in note.keys():
+        return note
 
     sense_separator = mw.addonManager.getConfig(__name__)["sense_separator"]
     subsense_separator = mw.addonManager.getConfig(__name__)["subsense_separator"]
