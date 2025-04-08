@@ -23,23 +23,27 @@ def simplify_note(note):
 
     soup = BeautifulSoup(note[glossary_field], "html.parser")
     definitions = []
-    for glossary in soup.findAll(attrs={"data-sc-content": "glossary"}):
-        glosses = [item.get_text() for item in glossary.findAll("li")]
 
-        explanation = glossary.find_next(attrs={"data-sc-content": "info-gloss"})
-        if explanation:
-            explanation = explanation.get_text(strip=True, separator=" ")
-            explanation = explanation.replace("Explanation", "", 1).strip()
-            definitions.append(subsense_separator.join(glosses) + f" ({explanation})")
 
-        else:
-            definitions.append(subsense_separator.join(glosses))
+    content = soup.findAll(attrs={"data-sc-content": "glossary"})
+    if content:
+        for glossary in content:
+            glosses = [item.get_text() for item in glossary.findAll("li")]
 
-    note[glossary_field] = sense_separator.join(definitions)
+            explanation = glossary.find_next(attrs={"data-sc-content": "info-gloss"})
+            if explanation:
+                explanation = explanation.get_text(strip=True, separator=" ")
+                explanation = explanation.replace("Explanation", "", 1).strip()
+                definitions.append(subsense_separator.join(glosses) + f" ({explanation})")
+
+            else:
+                definitions.append(subsense_separator.join(glosses))
+
+        note[glossary_field] = sense_separator.join(definitions)
     return note
 
 
-def on_add_note(collection, note, deck_id):
+def on_flush_note(note):
     if mw.addonManager.getConfig(__name__)["modify_new"]:
         simplify_note(note)
     return
@@ -65,4 +69,4 @@ def simplify_notes(browser):
 
 
 gui_hooks.browser_menus_did_init.append(setup_menu)
-hooks.note_will_be_added.append(on_add_note)
+hooks.note_will_flush.append(on_flush_note)

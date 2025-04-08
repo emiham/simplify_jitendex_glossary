@@ -1,7 +1,8 @@
 **glossary_field**: The name of the field containing the Jitendex glossary from Yomitan.
 
 **modify_new**: `true` or `false`. Whether newly added notes should be updated
-automatically.
+automatically. This also affects notes that get updated, e.g. if you overwrite
+the contents of the field via Yomitan.
 
 **sense_separator**: The string to separate each sense of the glossary, i.e.
 each item in the numbered list.
