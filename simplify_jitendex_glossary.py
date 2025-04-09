@@ -79,11 +79,11 @@ def simplify_notes(browser):
     mw.reset()
 
 
-def on_flush_note(note):
+def on_add_note(note):
     if mw.addonManager.getConfig(__name__)["modify_new"]:
         simplify_note(note)
     return
 
 
 gui_hooks.browser_menus_did_init.append(setup_menu)
-hooks.note_will_flush.append(on_flush_note)
+hooks.note_will_be_added.append(on_add_note)
