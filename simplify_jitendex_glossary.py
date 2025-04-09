@@ -79,7 +79,7 @@ def simplify_notes(browser):
     mw.reset()
 
 
-def on_add_note(note):
+def on_add_note(collection, note, deck_id):
     if mw.addonManager.getConfig(__name__)["modify_new"]:
         simplify_note(note)
     return
