@@ -26,16 +26,20 @@ def simplify_field_content(field):
         for glossary in content:
             glosses = [item.get_text() for item in glossary.findAll("li")]
 
+            append_text = ""
             explanation = glossary.find_next(attrs={"data-sc-content": "info-gloss"})
             if explanation:
                 explanation = explanation.get_text(strip=True, separator=" ")
                 explanation = explanation.replace("Explanation", "", 1).strip()
-                definitions.append(
-                    subsense_separator.join(glosses) + f" ({explanation})"
-                )
+                append_text +=  f" ({explanation})"
 
-            else:
-                definitions.append(subsense_separator.join(glosses))
+            note = glossary.find_next(attrs={"data-sc-content": "sense-note"})
+            if note:
+                note = note.get_text(strip=True, separator=" ")
+                note = note.replace("Note", "", 1).strip()
+                append_text +=  f" [{note}]"
+
+            definitions.append(subsense_separator.join(glosses) + append_text)
 
         return sense_separator.join(definitions)
 

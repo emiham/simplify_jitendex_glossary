@@ -13,7 +13,8 @@ In the card browser, select the notes you want to update, and click "Simplify
 Jitendex glossary" in the *Edit* menu.
 
 Some words have an explanatory note, e.g. 見せ物. This will be added in
-parentheses, as in the example below.
+parentheses, as in the example below. There is another form of note, shown just
+as *Note* in Jitendex. These will be added in square brackets.
 
 ## Example
 
